@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <!-- 建议禁用外框浏览器自带的缩放 -->
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0,user-scalable=no"
+        />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>WPS Web Office(iframe)接入指南</title>
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+
+            html,
+            body {
+                display: flex;
+                flex-direction: column;
+                padding: 0;
+                margin: 0;
+                height: 100%;
+                /* 防止双击缩放 */
+                touch-action: manipulation;
+            }
+
+            iframe {
+                flex: 1;
+            }
+        </style>
+        <!-- cdn引入JQ -->
+        <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
+        <script src="./jwps.js"></script>
+        <script type="text/javascript">
+            // 支持 HTTPS
+            // 注意：如果通过postMessage来设置token，请在url参数加上_w_tokentype=1
+            function showWPS(url) {
+                // 初始化
+                var wps = WPS.config({
+                    mount: document.querySelector("body"),
+                    // 文字
+                    wpsUrl: url,
+                    headers: {
+                        shareBtn: {
+                            tooltip: "分享",
+                            subscribe: function() {
+                                console.log("click callback");
+                            }
+                        },
+                        otherMenuBtn: {
+                            tooltip: "其他按钮",
+                            items: [
+                                {
+                                    // 自定义, type 固定填 'custom'
+                                    type: "custom",
+                                    icon:
+                                        "http://ep.wps.cn/index/images/logo_white2.png",
+                                    text: "API 导出 PDF",
+                                    subscribe: function(wps) {
+                                        if (wps.WpsApplication) {
+                                            wps.WpsApplication()
+                                                .ActiveDocument.ExportAsFixedFormatAsync()
+                                                .then(function(result) {
+                                                    console.table(result);
+                                                });
+                                        }
+                                    }
+                                },
+                                {
+                                    // 自定义, type 固定填 'custom'
+                                    type: "custom",
+                                    icon:
+                                        "http://ep.wps.cn/index/images/logo_white2.png",
+                                    text: "API 使用",
+                                    subscribe: function(wps) {
+                                        let result;
+                                        if (wps.WpsApplication) {
+                                            wps.WpsApplication()
+                                                .ActiveDocument.ExportAsFixedFormatAsync()
+                                                .then(function(result) {
+                                                    console.table(result);
+                                                });
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                });
+                return wps;
+            }
+
+            window.onload = function() {
+                $.ajax({
+                    url: "接口地址/api/wps/genarate",
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: JSON.stringify({
+                        fileId: 123,
+                        fileName: "test.docx",
+                        fileType: 1,
+                        userId: 123
+                    }),
+                    type: "post",
+                    success: function(res) {
+                        var wpsUrl = res.url;
+                        console.log(wpsUrl);
+                        var wps = showWPS(wpsUrl);
+                    }
+                });
+            };
+        </script>
+    </head>
+    <body></body>
+</html>
