@@ -122,8 +122,9 @@ namespace WPSApi.Controllers
                         download_url = "文件下载链接",
                         user_acl = new User_acl
                         {
-                            history = 1, // 可以查看历史版本
-                            rename = 1 // 可以重命名
+                            history = 1, // 允许查看历史版本
+                            rename = 1, // 允许重命名
+                            copy = 1 // 允许复制
                         },
                         watermark = new Watermark
                         {
