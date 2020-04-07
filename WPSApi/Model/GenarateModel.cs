@@ -1,4 +1,4 @@
-﻿namespace WPSApi.Model
+namespace WPSApi.Model
 {
     /// <summary>
     /// 生成WPS的iframe url的入参，可以自己扩展参数，然后放到DIctionary中进行签名，参见写好的例子

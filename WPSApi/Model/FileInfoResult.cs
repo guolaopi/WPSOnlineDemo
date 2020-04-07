@@ -1,4 +1,4 @@
-﻿namespace WPSApi.Model
+namespace WPSApi.Model
 {
     /// <summary>
     /// 获取文件元数据 出参
